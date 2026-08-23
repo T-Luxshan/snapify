@@ -15,7 +15,7 @@ public class UrlValidator {
             return true;
         }
         else {
-            throw new InvalidUrlException("Invalid URL");
+            throw new InvalidUrlException("Invalid URL: must start with http:// or https://");
         }
     }
 
