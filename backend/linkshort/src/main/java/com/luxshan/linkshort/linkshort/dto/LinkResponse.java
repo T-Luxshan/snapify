@@ -2,12 +2,13 @@ package com.luxshan.linkshort.linkshort.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 public class LinkResponse {
-    String shortCode;
-    String shortUrl;
-    String originalUrl;
-    String createdAt;
+    private String shortCode;
+    private String shortUrl;
+    private String originalUrl;
+    private LocalDateTime createdAt;
 }
