@@ -64,6 +64,15 @@ public class LinkService {
         return toResponse(link);
     }
 
+    // Delete a link by short code
+    public void deleteLink(String shortCode){
+        if(!links.containsKey(shortCode)) {
+            throw new LinkNotFoundException("Short link not found: " + shortCode);
+        }
+        links.remove(shortCode);
+
+    }
+
 
     // helper method to convert Link to LinkResponse
     private LinkResponse toResponse(Link link) {
