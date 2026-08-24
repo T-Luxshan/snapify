@@ -73,7 +73,19 @@ public class LinkService {
 
     }
 
+    // Redirect to original URL
+    public String getOriginalUrl(String shortCode){
+        Link link = links.get(shortCode);
+        if (link == null) {
+            throw new LinkNotFoundException("Short link not found: " + shortCode);
+        }
+        if(!link.isActive()) {
+            throw new LinkNotFoundException("Short link not found: " + shortCode);
+        }
+        return link.getOriginalUrl();
+    }
 
+    
     // helper method to convert Link to LinkResponse
     private LinkResponse toResponse(Link link) {
         return LinkResponse.builder()
