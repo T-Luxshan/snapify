@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class UrlValidator {
     public boolean isValid(String url) {
         if(url == null || url.isEmpty()) {
-            throw new InvalidUrlException("URL is required");
+           return false;
         }
         // if(url.length() > 2048) {
         //     return false;
@@ -15,7 +15,7 @@ public class UrlValidator {
             return true;
         }
         else {
-            throw new InvalidUrlException("Invalid URL: must start with http:// or https://");
+            return false;
         }
     }
 
