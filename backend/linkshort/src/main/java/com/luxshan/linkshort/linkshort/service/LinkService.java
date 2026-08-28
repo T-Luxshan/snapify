@@ -40,7 +40,7 @@ public class LinkService {
             shortCode = shortCodeGenerator.generate();
             attempts++;
         }
-        if (attempts >= 3) {
+        if (attempts > 3) {
             throw new ShortCodeGenerationException("Failed to generate a unique short code");
         }
         Link link = Link.builder()
