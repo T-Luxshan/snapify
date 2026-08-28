@@ -44,10 +44,11 @@ public class LinkService {
             throw new ShortCodeGenerationException("Failed to generate a unique short code");
         }
         Link link = Link.builder()
-            .shortCode(shortCode)
-            .originalUrl(request.getOriginalUrl())
-            .createdAt(LocalDateTime.now())
-            .build();
+                .shortCode(shortCode)
+                .originalUrl(request.getOriginalUrl())
+                .createdAt(LocalDateTime.now())
+                .active(true)
+                .build();
         links.put(shortCode, link);
         return toResponse(link);
     }
