@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleLinkNotFound(LinkNotFoundException linkNotFoundException){
         return ErrorResponse.builder()
-                .error(linkNotFoundException.toString())
+                .error("LINK_NOT_FOUND")
                 .message(linkNotFoundException.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
