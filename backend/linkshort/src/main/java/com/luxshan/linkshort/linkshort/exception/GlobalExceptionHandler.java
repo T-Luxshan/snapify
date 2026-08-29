@@ -39,4 +39,14 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .build();
     }
+
+    @ExceptionHandler(ShortCodeGenerationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleShortCodeGenerationException(ShortCodeGenerationException exception){
+        return ErrorResponse.builder()
+                .error("Short Code Generation Failed")
+                .message(exception.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
 }
