@@ -2,10 +2,8 @@ package com.luxshan.linkshort.linkshort.controller;
 
 import com.luxshan.linkshort.linkshort.dto.CreateLinkRequest;
 import com.luxshan.linkshort.linkshort.dto.LinkResponse;
-import com.luxshan.linkshort.linkshort.exception.LinkNotFoundException;
 import com.luxshan.linkshort.linkshort.service.LinkService;
 import jakarta.validation.Valid;
-import jdk.dynalink.linker.LinkRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
