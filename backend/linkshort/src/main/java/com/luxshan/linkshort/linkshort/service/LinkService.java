@@ -31,9 +31,9 @@ public class LinkService {
 
     // Create a new link
     public LinkResponse createLink(CreateLinkRequest request){
-        if (!urlValidator.isValid(request.getOriginalUrl())) {
-            throw new InvalidUrlException("Invalid URL: must start with http:// or https://");
-        }
+//        if (!urlValidator.isValid(request.getOriginalUrl())) {
+//            throw new InvalidUrlException("Invalid URL: must start with http:// or https://");
+//        }
         String shortCode = shortCodeGenerator.generate();
         int attempts = 0;
         while (links.containsKey(shortCode) && attempts < 3) {
