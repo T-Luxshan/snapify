@@ -1,7 +1,9 @@
 package com.luxshan.linkshort.linkshort.exception;
 
 import com.luxshan.linkshort.linkshort.dto.ErrorResponse;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,6 +19,23 @@ public class GlobalExceptionHandler {
         return ErrorResponse.builder()
                 .error("LINK_NOT_FOUND")
                 .message(linkNotFoundException.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleInvalidUrl(MethodArgumentNotValidException exception){
+        String message = exception.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .findFirst()
+                .orElse("Invalid request");
+
+        return ErrorResponse.builder()
+                .error("Validation Error")
+                .message(message)
                 .timestamp(LocalDateTime.now())
                 .build();
     }
