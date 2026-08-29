@@ -1,28 +1,26 @@
 package com.luxshan.linkshort.linkshort.service;
 
-import org.springframework.stereotype.Service;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import com.luxshan.linkshort.linkshort.dto.CreateLinkRequest;
+import com.luxshan.linkshort.linkshort.dto.LinkResponse;
+import com.luxshan.linkshort.linkshort.exception.LinkNotFoundException;
+import com.luxshan.linkshort.linkshort.exception.ShortCodeGenerationException;
 import com.luxshan.linkshort.linkshort.model.Link;
 import com.luxshan.linkshort.linkshort.util.ShortCodeGenerator;
 import com.luxshan.linkshort.linkshort.util.UrlValidator;
 import org.springframework.beans.factory.annotation.Value;
-import com.luxshan.linkshort.linkshort.dto.LinkResponse;
-import com.luxshan.linkshort.linkshort.dto.CreateLinkRequest;
-import com.luxshan.linkshort.linkshort.exception.InvalidUrlException;
-import com.luxshan.linkshort.linkshort.exception.ShortCodeGenerationException;
-import com.luxshan.linkshort.linkshort.exception.LinkNotFoundException;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class LinkService {
 
     private final ShortCodeGenerator shortCodeGenerator;
-    private final UrlValidator urlValidator;
 
-    public LinkService(ShortCodeGenerator shortCodeGenerator, UrlValidator urlValidator) {
+    public LinkService(ShortCodeGenerator shortCodeGenerator) {
         this.shortCodeGenerator = shortCodeGenerator;
-        this.urlValidator = urlValidator;
     }
 
     private final Map<String, Link> links = new ConcurrentHashMap<>();
@@ -31,18 +29,17 @@ public class LinkService {
 
     // Create a new link
     public LinkResponse createLink(CreateLinkRequest request){
-//        if (!urlValidator.isValid(request.getOriginalUrl())) {
-//            throw new InvalidUrlException("Invalid URL: must start with http:// or https://");
-//        }
+
         String shortCode = shortCodeGenerator.generate();
-        int attempts = 0;
-        while (links.containsKey(shortCode) && attempts < 3) {
+        int attempts = 1;
+        while (links.containsKey(shortCode)) {
+            if(attempts >= 3) {
+                throw new ShortCodeGenerationException("Failed to generate a unique short code");
+            }
             shortCode = shortCodeGenerator.generate();
             attempts++;
         }
-        if (attempts > 3) {
-            throw new ShortCodeGenerationException("Failed to generate a unique short code");
-        }
+
         Link link = Link.builder()
                 .shortCode(shortCode)
                 .originalUrl(request.getOriginalUrl())
