@@ -21,13 +21,15 @@ public class Link {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "short_code")
+    @Column(name = "short_code", nullable = false, unique = true, length = 7)
     private String shortCode;
 
-    @Column(name = "original_url")
+    @Column(name = "original_url", nullable = false, length = 2048)
     private String originalUrl;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
     private boolean active;
 }
