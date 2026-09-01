@@ -5,25 +5,27 @@ import com.luxshan.linkshort.linkshort.dto.LinkResponse;
 import com.luxshan.linkshort.linkshort.exception.LinkNotFoundException;
 import com.luxshan.linkshort.linkshort.exception.ShortCodeGenerationException;
 import com.luxshan.linkshort.linkshort.model.Link;
+import com.luxshan.linkshort.linkshort.repository.LinkRepository;
 import com.luxshan.linkshort.linkshort.util.ShortCodeGenerator;
-import com.luxshan.linkshort.linkshort.util.UrlValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class LinkService {
 
     private final ShortCodeGenerator shortCodeGenerator;
+    private final LinkRepository linkRepository;
 
-    public LinkService(ShortCodeGenerator shortCodeGenerator) {
+    public LinkService(ShortCodeGenerator shortCodeGenerator, LinkRepository linkRepository) {
         this.shortCodeGenerator = shortCodeGenerator;
+        this.linkRepository = linkRepository;
     }
 
-    private final Map<String, Link> links = new ConcurrentHashMap<>();
     @Value("${app.base-url}")
     private String baseUrl;
 
@@ -31,8 +33,9 @@ public class LinkService {
     public LinkResponse createLink(CreateLinkRequest request){
 
         String shortCode = shortCodeGenerator.generate();
+
         int attempts = 1;
-        while (links.containsKey(shortCode)) {
+        while (linkRepository.existsByShortCode(shortCode)) {
             if(attempts >= 3) {
                 throw new ShortCodeGenerationException("Failed to generate a unique short code");
             }
@@ -46,16 +49,18 @@ public class LinkService {
                 .createdAt(LocalDateTime.now())
                 .active(true)
                 .build();
-        links.put(shortCode, link);
+        linkRepository.save(link);
         return toResponse(link);
     }
 
     // Get a link by short code
     public LinkResponse getLink(String shortCode){
-        Link link = links.get(shortCode);
-        if (link == null) {
+        Optional<Link> linkOptional = linkRepository.findByShortCode(shortCode);
+        if (linkOptional.isEmpty()) {
             throw new LinkNotFoundException("Short link not found: " + shortCode);
         }
+
+        Link link = linkOptional.get();
         if(!link.isActive()) {
             throw new LinkNotFoundException("Short link not found: " + shortCode);
         }
@@ -64,19 +69,19 @@ public class LinkService {
 
     // Delete a link by short code
     public void deleteLink(String shortCode){
-        if(!links.containsKey(shortCode)) {
+        if(!linkRepository.existsByShortCode(shortCode)) {
             throw new LinkNotFoundException("Short link not found: " + shortCode);
         }
-        links.remove(shortCode);
+        linkRepository.deleteByShortCode(shortCode);
 
     }
 
     // Redirect to original URL
     public String getOriginalUrl(String shortCode){
-        Link link = links.get(shortCode);
-        if (link == null) {
-            throw new LinkNotFoundException("Short link not found: " + shortCode);
-        }
+        Link link = linkRepository.findByShortCode(shortCode)
+                .orElseThrow(()->
+                        new LinkNotFoundException("Short link not found: " + shortCode));
+
         if(!link.isActive()) {
             throw new LinkNotFoundException("Short link not found: " + shortCode);
         }
