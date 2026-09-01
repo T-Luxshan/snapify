@@ -9,11 +9,10 @@ import com.luxshan.linkshort.linkshort.repository.LinkRepository;
 import com.luxshan.linkshort.linkshort.util.ShortCodeGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class LinkService {
@@ -68,12 +67,12 @@ public class LinkService {
     }
 
     // Delete a link by short code
+    @Transactional
     public void deleteLink(String shortCode){
         if(!linkRepository.existsByShortCode(shortCode)) {
             throw new LinkNotFoundException("Short link not found: " + shortCode);
         }
         linkRepository.deleteByShortCode(shortCode);
-
     }
 
     // Redirect to original URL
