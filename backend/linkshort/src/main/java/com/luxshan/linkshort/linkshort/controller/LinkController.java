@@ -5,7 +5,10 @@ import com.luxshan.linkshort.linkshort.dto.LinkResponse;
 import com.luxshan.linkshort.linkshort.service.LinkService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/links")
@@ -33,6 +36,18 @@ public class LinkController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteLink(@PathVariable String shortCode){
         linkService.deleteLink(shortCode);
+    }
+
+    // redirect
+    @GetMapping("/r/{shortCode}")
+    @ResponseStatus
+    public ResponseEntity<Void> redirect(@PathVariable String shortCode){
+        String originalUrl = linkService.getOriginalUrl(shortCode);
+
+        return ResponseEntity
+                .status(HttpStatus.FOUND)
+                .location(URI.create(originalUrl))
+                .build();
     }
 
     @GetMapping("/ping")
