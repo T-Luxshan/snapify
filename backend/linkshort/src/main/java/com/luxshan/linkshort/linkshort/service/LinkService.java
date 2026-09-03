@@ -2,6 +2,7 @@ package com.luxshan.linkshort.linkshort.service;
 
 import com.luxshan.linkshort.linkshort.dto.CreateLinkRequest;
 import com.luxshan.linkshort.linkshort.dto.LinkResponse;
+import com.luxshan.linkshort.linkshort.exception.LinkExpiredException;
 import com.luxshan.linkshort.linkshort.exception.LinkNotFoundException;
 import com.luxshan.linkshort.linkshort.exception.ShortCodeGenerationException;
 import com.luxshan.linkshort.linkshort.model.Link;
@@ -84,6 +85,9 @@ public class LinkService {
 
         if(!link.isActive()) {
             throw new LinkNotFoundException("Short link not found: " + shortCode);
+        }
+        if (link.getExpiresAt() != null && link.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new LinkExpiredException("Short link is expired: " + shortCode);
         }
         return link.getOriginalUrl();
     }
