@@ -47,6 +47,7 @@ public class LinkService {
                 .originalUrl(request.getOriginalUrl())
                 .createdAt(LocalDateTime.now())
                 .active(true)
+                .expiresAt(request.getExpiresAt())
                 .build();
         linkRepository.save(link);
         return toResponse(link);
@@ -95,6 +96,7 @@ public class LinkService {
             .shortUrl(baseUrl + "/r/" + link.getShortCode())
             .originalUrl(link.getOriginalUrl())
             .createdAt(link.getCreatedAt())
+            .expiresAt(link.getExpiresAt())
             .build();
     }
 }
