@@ -13,4 +13,6 @@ public class LinkResponse {
     private String shortUrl;
     private String originalUrl;
     private LocalDateTime createdAt;
+    private LocalDateTime expiresAt;
+
 }

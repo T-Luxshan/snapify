@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class CreateLinkRequest {
@@ -12,5 +14,7 @@ public class CreateLinkRequest {
     @NotBlank(message = "Original URL is required")
     @URL(message = "Invalid URL format")
     private String originalUrl;
+
+    private LocalDateTime expiresAt;
 }
 

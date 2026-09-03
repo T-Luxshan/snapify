@@ -1,0 +1,7 @@
+CREATE TABLE links (
+   id BIGINT AUTO_INCREMENT PRIMARY KEY,
+   short_code VARCHAR(7) NOT NULL UNIQUE,
+   original_url VARCHAR(2048) NOT NULL,
+   created_at DATETIME NOT NULL,
+   active BOOLEAN NOT NULL
+);
