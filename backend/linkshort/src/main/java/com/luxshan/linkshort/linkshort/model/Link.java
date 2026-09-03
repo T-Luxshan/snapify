@@ -32,4 +32,7 @@ public class Link {
 
     @Column(nullable = false)
     private boolean active;
+
+    @Column(name = "expires_at")
+    private LocalDateTime expiresAt;
 }
