@@ -49,4 +49,14 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .build();
     }
+
+    @ExceptionHandler(LinkExpiredException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleLinkExpiredException(LinkExpiredException exception){
+        return ErrorResponse.builder()
+                .error("LINK_EXPIRED")
+                .message(exception.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
 }
