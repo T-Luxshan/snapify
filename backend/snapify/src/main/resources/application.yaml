@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: snapify
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/snapify?allowPublicKeyRetrieval=true&useSSL=false
+    username: snapify
+    password: snapify
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    show-sql: false
+
+  flyway:
+    enabled: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+app:
+  base-url: http://localhost:8080
