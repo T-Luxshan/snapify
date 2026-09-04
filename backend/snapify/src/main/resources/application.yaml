@@ -3,9 +3,9 @@ spring:
     name: snapify
 
   datasource:
-    url: jdbc:mysql://localhost:3306/linkshort?allowPublicKeyRetrieval=true&useSSL=false
-    username: linkshort
-    password: linkshort
+    url: jdbc:mysql://localhost:3306/snapify?allowPublicKeyRetrieval=true&useSSL=false
+    username: snapify
+    password: snapify
 
   jpa:
     hibernate:

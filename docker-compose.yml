@@ -5,14 +5,14 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: linkshort
-      MYSQL_USER: linkshort
-      MYSQL_PASSWORD: linkshort
+      MYSQL_DATABASE: snapify
+      MYSQL_USER: snapify
+      MYSQL_PASSWORD: snapify
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ulinkshort", "-plinkshort"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-usnapify", "-psnapify"]
       interval: 5s
       timeout: 5s
       retries: 10
