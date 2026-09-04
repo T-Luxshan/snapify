@@ -1,6 +1,5 @@
-package com.luxshan.linkshort.linkshort.util;
+package com.luxshan.snapify.util;
 
-import com.luxshan.linkshort.linkshort.exception.InvalidUrlException;
 import org.springframework.stereotype.Component;
 @Component
 public class UrlValidator {

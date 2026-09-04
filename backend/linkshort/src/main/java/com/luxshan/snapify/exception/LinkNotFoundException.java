@@ -1,4 +1,4 @@
-package com.luxshan.linkshort.linkshort.exception;
+package com.luxshan.snapify.exception;
 
 public class LinkNotFoundException extends RuntimeException {
     public LinkNotFoundException(String message) {

@@ -1,13 +1,13 @@
-package com.luxshan.linkshort.linkshort.service;
+package com.luxshan.snapify.service;
 
-import com.luxshan.linkshort.linkshort.dto.CreateLinkRequest;
-import com.luxshan.linkshort.linkshort.dto.LinkResponse;
-import com.luxshan.linkshort.linkshort.exception.LinkExpiredException;
-import com.luxshan.linkshort.linkshort.exception.LinkNotFoundException;
-import com.luxshan.linkshort.linkshort.exception.ShortCodeGenerationException;
-import com.luxshan.linkshort.linkshort.model.Link;
-import com.luxshan.linkshort.linkshort.repository.LinkRepository;
-import com.luxshan.linkshort.linkshort.util.ShortCodeGenerator;
+import com.luxshan.snapify.dto.CreateLinkRequest;
+import com.luxshan.snapify.dto.LinkResponse;
+import com.luxshan.snapify.exception.LinkExpiredException;
+import com.luxshan.snapify.exception.LinkNotFoundException;
+import com.luxshan.snapify.exception.ShortCodeGenerationException;
+import com.luxshan.snapify.model.Link;
+import com.luxshan.snapify.repository.LinkRepository;
+import com.luxshan.snapify.util.ShortCodeGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package com.luxshan.linkshort.linkshort.dto;
+package com.luxshan.snapify.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

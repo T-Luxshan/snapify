@@ -1,8 +1,8 @@
-package com.luxshan.linkshort.linkshort.controller;
+package com.luxshan.snapify.controller;
 
-import com.luxshan.linkshort.linkshort.dto.CreateLinkRequest;
-import com.luxshan.linkshort.linkshort.dto.LinkResponse;
-import com.luxshan.linkshort.linkshort.service.LinkService;
+import com.luxshan.snapify.dto.CreateLinkRequest;
+import com.luxshan.snapify.dto.LinkResponse;
+import com.luxshan.snapify.service.LinkService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

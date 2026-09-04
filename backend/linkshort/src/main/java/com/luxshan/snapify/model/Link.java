@@ -1,4 +1,4 @@
-package com.luxshan.linkshort.linkshort.model;
+package com.luxshan.snapify.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

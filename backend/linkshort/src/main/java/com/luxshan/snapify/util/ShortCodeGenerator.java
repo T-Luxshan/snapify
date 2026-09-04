@@ -1,4 +1,4 @@
-package com.luxshan.linkshort.linkshort.util;
+package com.luxshan.snapify.util;
 
 import org.springframework.stereotype.Component;
 import java.util.Random;

@@ -1,6 +1,6 @@
-package com.luxshan.linkshort.linkshort.exception;
+package com.luxshan.snapify.exception;
 
-import com.luxshan.linkshort.linkshort.dto.ErrorResponse;
+import com.luxshan.snapify.dto.ErrorResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;

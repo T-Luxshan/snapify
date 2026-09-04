@@ -1,6 +1,6 @@
-package com.luxshan.linkshort.linkshort.repository;
+package com.luxshan.snapify.repository;
 
-import com.luxshan.linkshort.linkshort.model.Link;
+import com.luxshan.snapify.model.Link;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

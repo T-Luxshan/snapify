@@ -1,4 +1,4 @@
-package com.luxshan.linkshort.linkshort.dto;
+package com.luxshan.snapify.dto;
 
 import lombok.Builder;
 import lombok.Getter;
