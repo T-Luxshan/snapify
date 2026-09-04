@@ -1,6 +1,6 @@
 spring:
   application:
-    name: linkshort
+    name: snapify
 
   datasource:
     url: jdbc:mysql://localhost:3306/linkshort?allowPublicKeyRetrieval=true&useSSL=false

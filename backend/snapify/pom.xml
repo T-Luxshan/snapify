@@ -8,8 +8,8 @@
 		<version>4.1.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.luxshan.linkshort</groupId>
-	<artifactId>linkshort</artifactId>
+	<groupId>com.luxshan.snapify</groupId>
+	<artifactId>snapify</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>
