@@ -1,7 +1,7 @@
 services:
   mysql:
     image: mysql:8
-    container_name: linkshort-mysql
+    container_name: snapify-mysql
     ports:
       - "3306:3306"
     environment:
@@ -19,7 +19,7 @@ services:
 
   redis:
     image: redis:7
-    container_name: linkshort-redis
+    container_name: snapify-redis
     ports:
       - "6379:6379"
     healthcheck:
