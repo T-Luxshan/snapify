@@ -1,6 +1,5 @@
 package com.luxshan.snapify.controller;
 
-import com.luxshan.snapify.dto.CachedLink;
 import com.luxshan.snapify.dto.CreateLinkRequest;
 import com.luxshan.snapify.dto.LinkResponse;
 import com.luxshan.snapify.service.LinkService;
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/links")
@@ -55,20 +53,6 @@ public class LinkController {
                 .build();
     }
 
-//    temp endpoint to test redis
-    @GetMapping("/redis-test")
-    public CachedLink redisTest(){
-        CachedLink cachedLink = CachedLink.builder()
-                .originalUrl("https://example.com")
-                .expiresAt(LocalDateTime.now())
-                .active(true)
-                .build();
-
-        redisService.set("test:link", cachedLink);
-
-        return redisService.get("test:link");
-
-    }
 
     @GetMapping("/ping")
     public String ping(){
