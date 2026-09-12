@@ -1,5 +1,6 @@
 package com.luxshan.snapify.service;
 
+import com.luxshan.snapify.dto.CachedLink;
 import com.luxshan.snapify.dto.CreateLinkRequest;
 import com.luxshan.snapify.dto.LinkResponse;
 import com.luxshan.snapify.exception.LinkExpiredException;
@@ -20,10 +21,12 @@ public class LinkService {
 
     private final ShortCodeGenerator shortCodeGenerator;
     private final LinkRepository linkRepository;
+    private final RedisService redisService;
 
-    public LinkService(ShortCodeGenerator shortCodeGenerator, LinkRepository linkRepository) {
+    public LinkService(ShortCodeGenerator shortCodeGenerator, LinkRepository linkRepository, RedisService redisService) {
         this.shortCodeGenerator = shortCodeGenerator;
         this.linkRepository = linkRepository;
+        this.redisService = redisService;
     }
 
     @Value("${app.base-url}")
@@ -79,16 +82,37 @@ public class LinkService {
 
     // Redirect to original URL
     public String getOriginalUrl(String shortCode){
+
+        String cacheKey = "link:" + shortCode;
+        CachedLink cachedLink = redisService.get(cacheKey);
+
+        if (cachedLink != null){
+            validateLink(
+                    cachedLink.isActive(),
+                    cachedLink.getExpiresAt(),
+                    shortCode
+            );
+            return cachedLink.getOriginalUrl();
+        }
+
         Link link = linkRepository.findByShortCode(shortCode)
                 .orElseThrow(()->
                         new LinkNotFoundException("Short link not found: " + shortCode));
 
-        if(!link.isActive()) {
-            throw new LinkNotFoundException("Short link not found: " + shortCode);
-        }
-        if (link.getExpiresAt() != null && link.getExpiresAt().isBefore(LocalDateTime.now())) {
-            throw new LinkExpiredException("Short link is expired: " + shortCode);
-        }
+        validateLink(
+                link.isActive(),
+                link.getExpiresAt(),
+                shortCode
+        );
+
+        CachedLink newCachedLink =  CachedLink.builder()
+                .originalUrl(link.getOriginalUrl())
+                .expiresAt(link.getExpiresAt())
+                .active(link.isActive())
+                .build();
+
+        redisService.set(cacheKey, newCachedLink);
+
         return link.getOriginalUrl();
     }
 
@@ -102,5 +126,15 @@ public class LinkService {
             .createdAt(link.getCreatedAt())
             .expiresAt(link.getExpiresAt())
             .build();
+    }
+
+    private void validateLink(boolean active, LocalDateTime expiresAt, String shortCode) {
+
+        if (!active) {
+            throw new LinkNotFoundException("Short link not found: " + shortCode);
+        }
+        if (expiresAt != null && expiresAt.isBefore(LocalDateTime.now())) {
+            throw new LinkExpiredException("Short link is expired: " + shortCode);
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.luxshan.snapify.controller;
 import com.luxshan.snapify.dto.CreateLinkRequest;
 import com.luxshan.snapify.dto.LinkResponse;
 import com.luxshan.snapify.service.LinkService;
+import com.luxshan.snapify.service.RedisService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,11 @@ import java.net.URI;
 public class LinkController {
 
     private final LinkService linkService;
+    private final RedisService redisService;
 
-    public LinkController(LinkService linkService) {
+    public LinkController(LinkService linkService, RedisService redisService) {
         this.linkService = linkService;
+        this.redisService = redisService;
     }
 
     // Get link with shortCode
@@ -49,6 +52,7 @@ public class LinkController {
                 .location(URI.create(originalUrl))
                 .build();
     }
+
 
     @GetMapping("/ping")
     public String ping(){
