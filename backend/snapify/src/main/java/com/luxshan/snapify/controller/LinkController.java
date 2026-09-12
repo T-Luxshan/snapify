@@ -53,11 +53,6 @@ public class LinkController {
                 .build();
     }
 
-    @GetMapping("/redis-test")
-    public String redisTest() {
-        redisService.set("test:key", "hello redis");
-        return redisService.get("test:key");
-    }
 
     @GetMapping("/ping")
     public String ping(){
