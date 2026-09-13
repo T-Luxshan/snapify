@@ -7,6 +7,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +20,10 @@ public class RedisService {
     public void set(String key, CachedLink cachedLink) {
         try {
             String value = objectMapper.writeValueAsString(cachedLink);
-            redisTemplate.opsForValue().set(key, value);
+
+            Duration ttl = calculateTtl(cachedLink.getExpiresAt());
+
+            redisTemplate.opsForValue().set(key, value, ttl);
         } catch (JacksonException exception) {
             throw new RuntimeException("Failed to serialize cached link", exception);
         }
@@ -36,5 +41,19 @@ public class RedisService {
         } catch (JacksonException  exception) {
             throw new RuntimeException("Failed to deserialize cached link", exception);
         }
+    }
+
+    private Duration calculateTtl(LocalDateTime expiresAt) {
+
+        if (expiresAt == null) {
+            return Duration.ofHours(1);
+        }
+        Duration ttl = Duration.between(
+                LocalDateTime.now(),
+                expiresAt
+        );
+        return ttl.isPositive()
+                ? ttl
+                : Duration.ofSeconds(1);
     }
 }
