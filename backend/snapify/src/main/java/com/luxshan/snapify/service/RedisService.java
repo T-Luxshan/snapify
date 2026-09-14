@@ -43,6 +43,10 @@ public class RedisService {
         }
     }
 
+    public void delete(String key) {
+        redisTemplate.delete(key);
+    }
+
     private Duration calculateTtl(LocalDateTime expiresAt) {
 
         if (expiresAt == null) {
