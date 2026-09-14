@@ -78,6 +78,9 @@ public class LinkService {
             throw new LinkNotFoundException("Short link not found: " + shortCode);
         }
         linkRepository.deleteByShortCode(shortCode);
+
+        String cacheKey = "link:" + shortCode;
+        redisService.delete(cacheKey);
     }
 
     // Redirect to original URL
