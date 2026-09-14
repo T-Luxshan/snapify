@@ -83,14 +83,14 @@ public class LinkService {
             throw new LinkNotFoundException("Short link not found: " + shortCode);
         }
 
-        String cacheKey = "link:" + shortCode;
+        String cacheKey = redisService.buildLinkKey(shortCode);
         redisService.delete(cacheKey);
     }
 
     // Redirect to original URL
     public String getOriginalUrl(String shortCode){
 
-        String cacheKey = "link:" + shortCode;
+        String cacheKey = redisService.buildLinkKey(shortCode);
         CachedLink cachedLink = redisService.get(cacheKey);
 
         if (cachedLink != null){

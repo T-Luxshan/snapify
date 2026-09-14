@@ -47,6 +47,10 @@ public class RedisService {
         redisTemplate.delete(key);
     }
 
+    public String buildLinkKey(String shortCode) {
+        return "link:" + shortCode;
+    }
+
     private Duration calculateTtl(LocalDateTime expiresAt) {
 
         if (expiresAt == null) {
