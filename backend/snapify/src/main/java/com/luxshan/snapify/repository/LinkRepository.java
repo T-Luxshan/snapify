@@ -10,5 +10,5 @@ public interface LinkRepository extends JpaRepository<Link, Long>{
 
     boolean existsByShortCode(String shortCode);
 
-    void deleteByShortCode(String shortCode);
+    int deleteByShortCode(String shortCode);
 }
