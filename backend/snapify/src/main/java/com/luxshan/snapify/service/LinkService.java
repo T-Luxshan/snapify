@@ -74,10 +74,14 @@ public class LinkService {
     // Delete a link by short code
     @Transactional
     public void deleteLink(String shortCode){
-        if(!linkRepository.existsByShortCode(shortCode)) {
+//        if(!linkRepository.existsByShortCode(shortCode)) {
+//            throw new LinkNotFoundException("Short link not found: " + shortCode);
+//        }
+        int deleted = linkRepository.deleteByShortCode(shortCode);
+
+        if (deleted == 0) {
             throw new LinkNotFoundException("Short link not found: " + shortCode);
         }
-        linkRepository.deleteByShortCode(shortCode);
 
         String cacheKey = "link:" + shortCode;
         redisService.delete(cacheKey);
