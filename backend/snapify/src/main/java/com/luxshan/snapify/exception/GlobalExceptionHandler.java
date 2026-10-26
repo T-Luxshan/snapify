@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
                 .orElse("Invalid request");
 
         return ErrorResponse.builder()
-                .error("Validation Error")
+                .error("VALIDATION_ERROR")
                 .message(message)
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleInvalidCredentialsException(
             InvalidCredentialsException exception) {
 
@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleAccessDeniedException(
             AccessDeniedException exception) {
 
