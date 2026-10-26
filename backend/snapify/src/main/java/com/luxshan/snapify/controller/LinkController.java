@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/links")
@@ -51,6 +52,11 @@ public class LinkController {
                 .status(HttpStatus.FOUND)
                 .location(URI.create(originalUrl))
                 .build();
+    }
+
+    @GetMapping()
+    public List<LinkResponse> getAllLinks(){
+        return linkService.getAllLinks();
     }
 
 

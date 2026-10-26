@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -135,6 +136,15 @@ public class LinkService {
         redisService.set(cacheKey, newCachedLink);
 
         return link.getOriginalUrl();
+    }
+
+    public List<LinkResponse> getAllLinks() {
+        User currentUser = getAuthenticatedUser();
+        List<Link> links = linkRepository.findAllByUser_Id(currentUser.getId());
+
+         return links.stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     
