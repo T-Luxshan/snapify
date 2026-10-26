@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
                 .orElse("Invalid request");
 
         return ErrorResponse.builder()
-                .error("Validation Error")
+                .error("VALIDATION_ERROR")
                 .message(message)
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleShortCodeGenerationException(ShortCodeGenerationException exception){
         return ErrorResponse.builder()
-                .error("Short Code Generation Failed")
+                .error("SHORT_CODE_GENERATION_FAILED")
                 .message(exception.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -73,12 +73,24 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleInvalidCredentialsException(
             InvalidCredentialsException exception) {
 
         return ErrorResponse.builder()
                 .error("Invalid_Credentials")
+                .message(exception.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleAccessDeniedException(
+            AccessDeniedException exception) {
+
+        return ErrorResponse.builder()
+                .error("Access_Denied")
                 .message(exception.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();

@@ -3,17 +3,22 @@ package com.luxshan.snapify.service;
 import com.luxshan.snapify.dto.CachedLink;
 import com.luxshan.snapify.dto.CreateLinkRequest;
 import com.luxshan.snapify.dto.LinkResponse;
+import com.luxshan.snapify.exception.AccessDeniedException;
 import com.luxshan.snapify.exception.LinkExpiredException;
 import com.luxshan.snapify.exception.LinkNotFoundException;
 import com.luxshan.snapify.exception.ShortCodeGenerationException;
 import com.luxshan.snapify.model.Link;
+import com.luxshan.snapify.model.User;
 import com.luxshan.snapify.repository.LinkRepository;
 import com.luxshan.snapify.util.ShortCodeGenerator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,6 +40,9 @@ public class LinkService {
     // Create a new link
     public LinkResponse createLink(CreateLinkRequest request){
 
+
+        User currentUser = getAuthenticatedUser();
+
         String shortCode = shortCodeGenerator.generate();
 
         int attempts = 1;
@@ -52,6 +60,7 @@ public class LinkService {
                 .createdAt(LocalDateTime.now())
                 .active(true)
                 .expiresAt(request.getExpiresAt())
+                .user(currentUser)
                 .build();
         linkRepository.save(link);
         return toResponse(link);
@@ -68,21 +77,26 @@ public class LinkService {
         if(!link.isActive()) {
             throw new LinkNotFoundException("Short link not found: " + shortCode);
         }
+
+        User currentUser = getAuthenticatedUser();
+        if (link.getUser() == null || !currentUser.getId().equals(link.getUser().getId())) {
+            throw new AccessDeniedException("You do not have permission to access this link");
+        }
         return toResponse(link);
     }
 
     // Delete a link by short code
     @Transactional
     public void deleteLink(String shortCode){
-//        if(!linkRepository.existsByShortCode(shortCode)) {
-//            throw new LinkNotFoundException("Short link not found: " + shortCode);
-//        }
-        int deleted = linkRepository.deleteByShortCode(shortCode);
+        Link link = linkRepository.findByShortCode(shortCode)
+                .orElseThrow(() -> new LinkNotFoundException("Short link not found: " + shortCode));
 
-        if (deleted == 0) {
-            throw new LinkNotFoundException("Short link not found: " + shortCode);
+        User currentUser = getAuthenticatedUser();
+
+        if (link.getUser() == null || !currentUser.getId().equals(link.getUser().getId())) {
+            throw new AccessDeniedException("This deletion is Unauthorized");
         }
-
+        linkRepository.deleteByShortCode(shortCode);
         String cacheKey = redisService.buildLinkKey(shortCode);
         redisService.delete(cacheKey);
     }
@@ -123,6 +137,15 @@ public class LinkService {
         return link.getOriginalUrl();
     }
 
+    public List<LinkResponse> getAllLinks() {
+        User currentUser = getAuthenticatedUser();
+        List<Link> links = linkRepository.findAllByUser_Id(currentUser.getId());
+
+         return links.stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     
     // helper method to convert Link to LinkResponse
     private LinkResponse toResponse(Link link) {
@@ -143,5 +166,10 @@ public class LinkService {
         if (expiresAt != null && expiresAt.isBefore(LocalDateTime.now())) {
             throw new LinkExpiredException("Short link is expired: " + shortCode);
         }
+    }
+
+    private User getAuthenticatedUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return  (User) authentication.getPrincipal();
     }
 }

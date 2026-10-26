@@ -35,4 +35,8 @@ public class Link {
 
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
