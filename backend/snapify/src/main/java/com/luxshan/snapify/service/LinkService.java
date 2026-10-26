@@ -91,10 +91,9 @@ public class LinkService {
         Link link = linkRepository.findByShortCode(shortCode)
                 .orElseThrow(() -> new LinkNotFoundException("Short link not found: " + shortCode));
 
-
         User currentUser = getAuthenticatedUser();
 
-        if (!currentUser.getId().equals(link.getUser().getId())) {
+        if (link.getUser() == null || !currentUser.getId().equals(link.getUser().getId())) {
             throw new AccessDeniedException("This deletion is Unauthorized");
         }
         linkRepository.deleteByShortCode(shortCode);
